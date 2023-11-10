@@ -1,4 +1,5 @@
 class Column
+  include Enumerable
   attr_reader(:cells)
 
   def initialize(sheet, cells)
@@ -10,7 +11,7 @@ class Column
     cells << cell
   end
 
-  def name 
+  def name
     cells[0]
   end
 
@@ -42,12 +43,12 @@ class Column
     @sheet.row(i - 1)
   end
 
+  def to_s
+    cells.to_s
+  end
+
   def sum
-    sum = 0
-    cells.each do |cell|
-      sum += cell.to_i
-    end
-    sum
+    cells.map(&:to_i).reduce(:+)
   end
 
   def avg
