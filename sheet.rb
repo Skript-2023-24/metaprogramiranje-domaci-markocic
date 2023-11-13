@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Comment to satisfy rubocop
 class Sheet
   include Enumerable
   attr_reader(:worksheet, :array)
@@ -9,12 +12,18 @@ class Sheet
   end
 
   def row(index)
+    to_array.transpose[index]
+  end
+
+  def to_array
     arr = []
-
-    (@array.length).times do |i|
-      arr << @array[i][index]
+    @array.each do |column|
+      col = []
+      column.each do |cell|
+        col << cell
+      end
+      arr << col
     end
-
     arr
   end
 
@@ -38,12 +47,39 @@ class Sheet
   def filter_total
     @array.length.times do |i|
       @array[0].cells.length.times do |j|
-        if @array[i].cells[j].include? "total"
+        if @array[i].cells[j].include? 'total'
           remove_row(j)
           break
         end
       end
     end
+  end
+
+  def +(other)
+    raise ArgumentError, "Headers are not the same" unless operable?(other)
+
+    @array.length.times do |i|
+      @array[i] += other.array[i]
+    end
+    self
+  end
+
+  def -(other)
+    raise ArgumentError, "Headers are not the same" unless operable?(other)
+
+    @array.length.times do |i|
+      @array[i] -= other.array[i]
+    end
+    self
+  end
+
+  def operable?(other)
+    return false unless other.is_a? Sheet
+
+    @array.length.times do |i|
+      return false unless @array[i].name == other.array[i].name
+    end
+    true
   end
 
   def find_table
@@ -54,11 +90,9 @@ class Sheet
     end
   end
 
-  def each
+  def each(&)
     (@array[0].cells.length - 1).times do |i|
-      row(i).each do |cell|
-        yield cell
-      end
+      row(i).each(&)
     end
   end
 
@@ -70,6 +104,10 @@ class Sheet
     column_by_name(key.to_s)
   end
 
+  def respond_to_missing?
+    true
+  end
+
   def remove_row(index)
     array.each do |col|
       col.cells.delete_at(index)
@@ -79,15 +117,14 @@ class Sheet
   private
 
   def column_by_name(col_name)
-    col_name = normalize_name(col_name)
+    col_norm = normalize_name(col_name)
     array.each do |column|
-      return column if col_name == normalize_name(column.name)
+      return column if col_norm == normalize_name(column.name)
     end
-    nil
+    raise ArgumentError, "Column with the name #{col_name} could not be found"
   end
 
   def normalize_name(name)
-    name.gsub! ' ', ''
-    name.downcase
+    (name.gsub ' ', '').downcase
   end
 end

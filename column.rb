@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# comment
 class Column
   include Enumerable
   attr_reader(:cells)
@@ -40,7 +43,11 @@ class Column
       i += 1
     end
 
-    @sheet.row(i - 1)
+    @sheet.row(i)
+  end
+
+  def respond_to_missing?
+    true
   end
 
   def to_s
@@ -53,5 +60,13 @@ class Column
 
   def avg
     sum / (cells.length - 1).to_f
+  end
+
+  def +(other)
+    @cells + other.cells
+  end
+
+  def -(other)
+    @cells - other.cells
   end
 end

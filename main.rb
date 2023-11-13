@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'google_drive'
-require './Column'
-require './Sheet'
+require './column'
+require './sheet'
 
 session = GoogleDrive::Session
           .from_config('client_secrets.json')
@@ -9,9 +11,11 @@ sheet = Sheet.new(session, '1qkMlrCTPyVs0pmnXi4dPJxnAwDTL869LdHijnUjIttE', 0)
 
 #### 1.
 # p sheet.array
+# pp sheet.to_array
 #### 2.
 # # ispisi red sa indeksom 1
-# p sheet.row(1)
+# pp sheet.row(1)
+# pp sheet.row(1)[1]
 #### 3.
 # # ispisi sa leva na desno, sadrzaj tabele
 # sheet.each do |cell|
@@ -22,7 +26,7 @@ sheet = Sheet.new(session, '1qkMlrCTPyVs0pmnXi4dPJxnAwDTL869LdHijnUjIttE', 0)
 #### 5.
 # moguce je pristupiti celoj koloni po imenu kolone
 # ignorise razmake i case-insensitive je
-# p sheet['prva Kolona']
+# pp sheet['prva Kolona']
 # puts sheet['prvakolona']
 # p sheet['prvakolona'].cells
 # p sheet['prvakolona'].name
@@ -33,8 +37,8 @@ sheet = Sheet.new(session, '1qkMlrCTPyVs0pmnXi4dPJxnAwDTL869LdHijnUjIttE', 0)
 # p sheet['prvakolona'][1]
 #### 6.
 # t.prvaKolona, t.prvaKolona.sum itd.
-# p sheet.prvakolona
-# p sheet.prvakolona.sum
+# pp sheet.prvakolona
+# pp sheet.prvakolona.sum
 # p sheet.prvakolona.avg
 # p sheet.drugaKolona
 # p sheet.indeks.rn9922
@@ -58,8 +62,10 @@ sheet = Sheet.new(session, '1qkMlrCTPyVs0pmnXi4dPJxnAwDTL869LdHijnUjIttE', 0)
 #### 7. ignorise redove koji sadrze rec total i subtotal
 
 #### 8. sabiranje tabela
-
+# sheet2 = Sheet.new(session, '1qkMlrCTPyVs0pmnXi4dPJxnAwDTL869LdHijnUjIttE', 1)
+# pp sheet + sheet2
 
 #### 9. oduzimanje tabela
+# pp sheet - sheet2
 
 #### 10. biblioteka prepoznaje prazne redove i ignorise
