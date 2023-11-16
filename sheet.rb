@@ -17,13 +17,7 @@ class Sheet
 
   def to_array
     arr = []
-    @array.each do |column|
-      col = []
-      column.each do |cell|
-        col << cell
-      end
-      arr << col
-    end
+    @array.each { |column| arr << column.cells }
     arr
   end
 
@@ -56,20 +50,16 @@ class Sheet
   end
 
   def +(other)
-    raise ArgumentError, "Headers are not the same" unless operable?(other)
+    raise ArgumentError, 'Headers are not the same' unless operable?(other)
 
-    @array.length.times do |i|
-      @array[i] += other.array[i]
-    end
+    @array.length.times { |i| @array[i] += other.array[i] }
     self
   end
 
   def -(other)
-    raise ArgumentError, "Headers are not the same" unless operable?(other)
+    raise ArgumentError, 'Headers are not the same' unless operable?(other)
 
-    @array.length.times do |i|
-      @array[i] -= other.array[i]
-    end
+    @array.length.times { |i| @array[i] -= other.array[i] }
     self
   end
 
@@ -104,8 +94,8 @@ class Sheet
     column_by_name(key.to_s)
   end
 
-  def respond_to_missing?
-    true
+  def respond_to_missing?(name, _include_private = false)
+    name != :to_ary
   end
 
   def remove_row(index)

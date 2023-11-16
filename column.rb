@@ -46,8 +46,8 @@ class Column
     @sheet.row(i)
   end
 
-  def respond_to_missing?
-    true
+  def respond_to_missing?(name, _include_private = false)
+    name != :to_ary
   end
 
   def to_s
